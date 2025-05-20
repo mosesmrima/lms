@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #111111; /* Black for main background */
+  --foreground: #ffffff; /* White for text */
+  --content: #1e1e1e; /* Dark gray for cards/containers */
+  --border: #333333; /* Dark gray for borders */
+  --primary: #f90026; /* Red for buttons and accents */
+  --primary-hover: #d10021; /* Darker red for hover states */
+  --gray-300: #d1d5db; /* Light gray */
+  --gray-400: #9ca3af; /* Medium gray */
+
+  /* Add missing shadcn variables */
+  --radius: 0.5rem;
+  --input: 215 20% 65%;
+  --ring: 215 20.2% 65.1%;
+  --secondary: 215 14% 34%;
+  --secondary-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+  --muted: 215 27.9% 16.9%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 215 27.9% 16.9%;
+  --accent-foreground: 0 0% 100%;
+  --popover: 215 27.9% 16.9%;
+  --popover-foreground: 0 0% 100%;
+  --card: 215 27.9% 16.9%;
+  --card-foreground: 0 0% 100%;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom theme classes */
+.bg-content {
+  background-color: var(--content);
+}
+
+.border-custom {
+  border-color: var(--border);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.hover\:bg-primary-hover:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Force rounded corners for specific components */
+.rounded-md {
+  border-radius: 0.375rem !important;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem !important;
+}
+
+/* Ensure hamburger menu is visible */
+.navbar-menu-toggle {
+  display: flex !important;
+}
+
+@media (min-width: 768px) {
+  .navbar-menu-toggle {
+    display: none !important;
+  }
+}
