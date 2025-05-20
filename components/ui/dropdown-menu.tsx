@@ -1,66 +1,58 @@
 "use client"
 
-import * as React from "react"
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu as HeroDropdownMenu,
-  DropdownItem,
-  DropdownSection,
-} from "@heroui/react"
+import React from "react"
+import { Dropdown as HeroDropdown, type DropdownProps as HeroDropdownProps } from "@heroui/react"
 import { cn } from "@/lib/utils"
 
-const DropdownMenu = Dropdown
+export interface DropdownMenuProps extends HeroDropdownProps {
+  asChild?: boolean
+}
 
-const DropdownMenuTrigger = DropdownTrigger
+const DropdownMenu = React.forwardRef<HTMLDivElement, DropdownMenuProps>(({ className, asChild = false, ...props }, ref) => {
+  return <HeroDropdown ref={ref} className={cn(className)} {...props} />
+})
+DropdownMenu.displayName = "DropdownMenu"
 
-const DropdownMenuContent = React.forwardRef<HTMLUListElement, React.ComponentPropsWithoutRef<typeof HeroDropdownMenu>>(
-  ({ className, ...props }, ref) => (
-    <HeroDropdownMenu
-      ref={ref}
-      className={cn(
-        "min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
-        className,
-      )}
-      {...props}
-    />
-  ),
+const DropdownMenuTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+  ({ className, ...props }, ref) => {
+    return <button ref={ref} className={cn("", className)} {...props} />
+  },
+)
+DropdownMenuTrigger.displayName = "DropdownMenuTrigger"
+
+const DropdownMenuContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn("", className)} {...props} />
+  },
 )
 DropdownMenuContent.displayName = "DropdownMenuContent"
 
-const DropdownMenuItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentPropsWithoutRef<typeof DropdownItem> & {
-    inset?: boolean
-  }
->(({ className, inset, ...props }, ref) => (
-  <DropdownItem
-    ref={ref}
-    className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      inset && "pl-8",
-      className,
-    )}
-    {...props}
-  />
-))
+const DropdownMenuItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn("", className)} {...props} />
+  },
+)
 DropdownMenuItem.displayName = "DropdownMenuItem"
 
-const DropdownMenuGroup = DropdownSection
+const DropdownMenuGroup = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn("", className)} {...props} />
+  },
+)
+DropdownMenuGroup.displayName = "DropdownMenuGroup"
 
-const DropdownMenuSeparator = React.forwardRef<HTMLHRElement, React.HTMLAttributes<HTMLHRElement>>(
-  ({ className, ...props }, ref) => <hr ref={ref} className={cn("-mx-1 my-1 h-px bg-muted", className)} {...props} />,
+const DropdownMenuSeparator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn("", className)} {...props} />
+  },
 )
 DropdownMenuSeparator.displayName = "DropdownMenuSeparator"
 
-const DropdownMenuLabel = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    inset?: boolean
-  }
->(({ className, inset, ...props }, ref) => (
-  <div ref={ref} className={cn("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className)} {...props} />
-))
+const DropdownMenuLabel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <div ref={ref} className={cn("", className)} {...props} />
+  },
+)
 DropdownMenuLabel.displayName = "DropdownMenuLabel"
 
 export {

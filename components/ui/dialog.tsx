@@ -1,57 +1,68 @@
 "use client"
 
 import React from "react"
-import { Modal, ModalContent, ModalHeader, ModalFooter, Button, useDisclosure } from "@heroui/react"
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@heroui/react"
 import { cn } from "@/lib/utils"
+
+const DialogContext = React.createContext<{
+  isOpen: boolean
+  onOpen: () => void
+  onOpenChange: (open: boolean) => void
+}>({
+  isOpen: false,
+  onOpen: () => {},
+  onOpenChange: () => {},
+})
 
 const Dialog = ({ children, ...props }: { children: React.ReactNode }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   return <DialogContext.Provider value={{ isOpen, onOpen, onOpenChange }}>{children}</DialogContext.Provider>
 }
+Dialog.displayName = "Dialog"
 
-type DialogContextType = {
-  isOpen: boolean
-  onOpen: () => void
-  onOpenChange: (isOpen: boolean) => void
-}
+const DialogTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+  ({ className, ...props }, ref) => {
+    const { onOpen } = React.useContext(DialogContext)
+    return <Button ref={ref} className={cn(className)} onClick={onOpen} {...props} />
+  },
+)
+DialogTrigger.displayName = "DialogTrigger"
 
-const DialogContext = React.createContext<DialogContextType | undefined>(undefined)
+const DialogContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => {
+    const { isOpen, onOpenChange } = React.useContext(DialogContext)
+    return (
+      <Modal isOpen={isOpen} onClose={() => onOpenChange(false)}>
+        <ModalContent ref={ref} className={cn(className)} {...props}>
+          {children}
+        </ModalContent>
+      </Modal>
+    )
+  },
+)
+DialogContent.displayName = "DialogContent"
 
-const useDialogContext = () => {
-  const context = React.useContext(DialogContext)
-  if (!context) {
-    throw new Error("Dialog components must be used within a Dialog")
-  }
-  return context
-}
+const DialogHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <ModalHeader ref={ref} className={cn(className)} {...props} />
+  },
+)
+DialogHeader.displayName = "DialogHeader"
 
-const DialogTrigger = ({ children, ...props }: { children: React.ReactNode }) => {
-  const { onOpen } = useDialogContext()
+const DialogBody = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <ModalBody ref={ref} className={cn(className)} {...props} />
+  },
+)
+DialogBody.displayName = "DialogBody"
 
-  return React.cloneElement(children as React.ReactElement, {
-    onClick: onOpen,
-    ...props,
-  })
-}
-
-const DialogContent = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { isOpen, onOpenChange } = useDialogContext()
-
-  return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} {...props}>
-      <ModalContent className={cn(className)}>{children}</ModalContent>
-    </Modal>
-  )
-}
-
-const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <ModalHeader className={cn(className)} {...props} />
-}
-
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <ModalFooter className={cn(className)} {...props} />
-}
+const DialogFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => {
+    return <ModalFooter ref={ref} className={cn(className)} {...props} />
+  },
+)
+DialogFooter.displayName = "DialogFooter"
 
 const DialogTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => {
   return <h2 className={cn("text-lg font-semibold", className)} {...props} />
@@ -62,9 +73,9 @@ const DialogDescription = ({ className, ...props }: React.HTMLAttributes<HTMLPar
 }
 
 const DialogClose = ({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
-  const { onOpenChange } = useDialogContext()
+  const { onOpenChange } = React.useContext(DialogContext)
 
   return <Button className={cn(className)} onClick={() => onOpenChange(false)} {...props} />
 }
 
-export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose }
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogDescription, DialogClose }
